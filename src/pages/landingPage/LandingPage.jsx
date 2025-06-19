@@ -57,8 +57,8 @@ function LandingPage() {
 
 const styles = {
   container: {
-    maxWidth: '800px',
-    margin: '40px auto',
+    maxWidth: '1000px',
+    // margin: '40px auto',
     padding: '30px',
     fontFamily: 'Poppins, sans-serif',
     backgroundColor: '#fefefe',
