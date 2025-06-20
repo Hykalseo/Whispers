@@ -1,3 +1,4 @@
+// src/pages/LandingPage.jsx
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './LandingPage.css';
@@ -5,11 +6,35 @@ import './LandingPage.css';
 function LandingPage() {
   const [showPopup, setShowPopup] = useState(false);
   const [quantity, setQuantity] = useState('');
+  const [timeLeft, setTimeLeft] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     document.body.classList.add('dark');
+    startCountdown();
   }, []);
+
+  const showTime = new Date('2025-07-16T19:00:00');
+
+  const startCountdown = () => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const distance = showTime - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        setTimeLeft('Showtime has started!');
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((distance / 1000 / 60) % 60);
+      const seconds = Math.floor((distance / 1000) % 60);
+
+      setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+    }, 1000);
+  };
 
   const handlePopupSubmit = (e) => {
     e.preventDefault();
@@ -29,117 +54,65 @@ function LandingPage() {
     venue: 'Amani Palladium Theater',
   };
 
-  const cast = [
-    { name: 'Michelle Audreliya', role: 'Clara (Tokoh utama)', photo: '/images/cast/michelle.jpg' },
-    { name: 'Rindu Nathania', role: 'Livia (Sahabat Clara)', photo: '/images/cast/rindu.jpg' },
-    { name: 'Elifa Bariza', role: 'Ny. Laras (Guru teater)', photo: '/images/cast/elifa.jpg' },
-    { name: 'Choirunissa', role: 'Anita (Pesaing)', photo: '/images/cast/choirunissa.jpg' },
-    { name: 'Rayhan Hadi Prasetya', role: 'Adrian (Penulis naskah)', photo: '/images/cast/rayhan.jpg' },
-  ];
-
-  const crew = [
-    { name: 'Nadia Puspita', role: 'Sutradara', photo: '/images/crew/nadia.jpg' },
-    { name: 'Dimas Arya', role: 'Penata Artistik', photo: '/images/crew/dimas.jpg' },
-    { name: 'Fathia Salsabila', role: 'Koreografer', photo: '/images/crew/fathia.jpg' },
-    { name: 'Bima Kusuma', role: 'Penata Musik', photo: '/images/crew/bima.jpg' },
-    { name: 'Siti Kamila', role: 'Manajer Produksi', photo: '/images/crew/kamila.jpg' },
-  ];
-
-  const leaders = [
-    { name: 'Lina A. Pramudita', role: 'Director', photo: '/images/crew/lina.jpg' },
-    { name: 'Yusuf Rahmadi', role: 'Dosen Pembimbing', photo: '/images/crew/yusuf.jpg' },
-    { name: 'Nabila Azzahra', role: 'Asisten Dosen', photo: '/images/crew/nabila.jpg' },
-  ];
-
   return (
     <main className="landing-container">
       <div className="landing-content">
-        <h1 className="landing-title">
-          🎭 Welcome to <span className="highlight">Whispers</span>
-        </h1>
-        <p className="landing-subtitle">
-          Sebuah pertunjukan teater yang menyentuh batas mimpi dan kenyataan.
-        </p>
+        <h1 className="landing-title">🎭 Whispers</h1>
+        <p className="landing-subtitle">COMM28-8SP & COMM28-16SP Present</p>
 
-        {/* Synopsis */}
+        <section className="card info-card">
+          <h2 className="section-title">📅 Show Information</h2>
+          <div className="info-box-grid">
+            <div className="info-box"><span className="info-icon">📆</span><p className="info-label">Date</p><p className="info-value">{showInfo.date}</p></div>
+            <div className="info-box"><span className="info-icon">⏰</span><p className="info-label">Time</p><p className="info-value">{showInfo.time}</p></div>
+            <div className="info-box"><span className="info-icon">📍</span><p className="info-label">Venue</p><p className="info-value">{showInfo.venue}</p></div>
+            <div className="info-box"><span className="info-icon">⏳</span><p className="info-label">Countdown</p><p className="info-value">{timeLeft}</p></div>
+          </div>
+        </section>
+
         <section className="card">
           <h2 className="section-title">📖 Synopsis</h2>
+          <h6 className="section-text">
+            Bey, a teenager who is trapped in loneliness and ostracized at school, she must
+struggle alone without the support or love from her parents.
+This situation draws the attraction of a malevolent spirit who wants to ruin Bey’s life
+even further.
+However, Bey is protected by the spirit that guards her house. Will Bey
+be able to endure and accept the reality, or will she collapse under the burden of
+everything she’s facing?
+          </h6>
+        </section>
+
+        <section className="card">
+          <h2 className="section-title">🎫 Get Your Seats Now!</h2>
           <p className="section-text">
-            “Whispers” adalah kisah yang menggambarkan pergolakan batin antara mimpi dan kenyataan,
-            di tengah dunia teater klasik yang mulai dilupakan.
+            Don’t miss the most anticipated performance of the year. Book your tickets before they run out! Bring your friends and be part of the story...
           </p>
+          <div className="button-group">
+            <button className="cta-button primary" onClick={() => setShowPopup(true)}>🎟️ Book Tickets</button>
+            <Link to="/merch">
+              <button className="cta-button secondary">🛍️ Visit Merch</button>
+            </Link>
+          </div>
         </section>
 
-        {/* Show Info */}
-        <div className="info-grid">
-          <div className="card info-card">
-            <h2 className="section-title">🗓️ Show Info</h2>
-            <ul className="info-list">
-              <li><strong>Date:</strong> {showInfo.date}</li>
-              <li><strong>Time:</strong> {showInfo.time}</li>
-              <li><strong>Venue:</strong> {showInfo.venue}</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Cast Section */}
         <section className="card">
-          <h2 className="section-title">🎭 Cast</h2>
-          <div className="cast-grid">
-            {cast.map((person, index) => (
-              <div key={index} className="cast-card">
-                <div className="cast-photo-wrapper">
-                  <img src={person.photo} alt={person.name} className="cast-photo" />
-                </div>
-                <div className="cast-details">
-                  <p className="cast-name">{person.name}</p>
-                  <p className="cast-role">{person.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Crew + Leaders */}
-        <section className="card">
-          <h2 className="section-title">🎬 Crew & Leadership</h2>
-          <div className="cast-grid">
-            {leaders.map((person, index) => (
-              <div key={`leader-${index}`} className="cast-card">
-                <div className="cast-photo-wrapper">
-                  <img src={person.photo} alt={person.name} className="cast-photo" />
-                </div>
-                <div className="cast-details">
-                  <p className="cast-name">{person.name}</p>
-                  <p className="cast-role">{person.role}</p>
-                </div>
-              </div>
-            ))}
-            {crew.map((person, index) => (
-              <div key={`crew-${index}`} className="cast-card">
-                <div className="cast-photo-wrapper">
-                  <img src={person.photo} alt={person.name} className="cast-photo" />
-                </div>
-                <div className="cast-details">
-                  <p className="cast-name">{person.name}</p>
-                  <p className="cast-role">{person.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Action Buttons */}
-        <div className="button-group">
-          <button className="cta-button primary" onClick={() => setShowPopup(true)}>
-            🎟️ Get Tickets
-          </button>
-          <Link to="/merch">
-            <button className="cta-button secondary">🛍️ Visit Merch</button>
+          <h2 className="section-title">✨ Meet The Team</h2>
+          <p className="section-text">Curious who's behind the story and performance?</p>
+          <Link to="/cast-crew">
+            <button className="cta-button primary">👥 View Cast & Crew</button>
           </Link>
-        </div>
+        </section>
 
-        {/* Footer */}
+        <a
+          href="https://wa.me/6281234567890?text=Halo%20saya%20ingin%20pesan%20tiket%20Whispers"
+          className="whatsapp-button"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          💬 Contact via WhatsApp
+        </a>
+
         <footer className="footer">
           <div className="footer-content">
             <p>&copy; 2025 Whispers Theater. All rights reserved.</p>
@@ -153,23 +126,12 @@ function LandingPage() {
         </footer>
       </div>
 
-      {/* Popup Modal */}
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-card">
             <h2 className="popup-title">🎟️ Masukkan Jumlah Kursi</h2>
-            <p className="popup-subtitle">Maksimal 10 kursi per pemesanan</p>
             <form onSubmit={handlePopupSubmit} className="popup-form">
-              <input
-                type="number"
-                min="1"
-                max="10"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-                className="popup-input"
-                placeholder="Jumlah kursi"
-                required
-              />
+              <input type="number" min="1" max="10" value={quantity} onChange={(e) => setQuantity(e.target.value)} className="popup-input" placeholder="Jumlah kursi" required />
               <div className="popup-actions">
                 <button type="button" className="popup-cancel" onClick={() => setShowPopup(false)}>Batal</button>
                 <button type="submit" className="popup-submit">Lanjut</button>

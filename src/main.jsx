@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import AppRoutes from './routing/AppRoutes'; // ✅ gunakan AppRoutes
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <AppRoutes /> {/* ✅ gunakan AppRoutes di sini */}
   </React.StrictMode>
 );

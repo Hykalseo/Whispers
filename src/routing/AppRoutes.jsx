@@ -6,7 +6,7 @@ import Merch from '../pages/merch/Merch';
 import Ticket from '../pages/ticket/Ticket';
 import BookingFormPage from '../pages/ticket/BookingFormPage';
 import PaymentPage from '../pages/ticket/payment';
-
+import CastCrewPage from '../pages/castandcrew/CastCrewPage';
 
 function AppRoutes() {
   return (
@@ -17,12 +17,10 @@ function AppRoutes() {
         <Route path="/ticket" element={<Ticket />} />
         <Route path="/ticket/booking" element={<BookingFormPage />} />
         <Route path="/ticket/payment" element={<PaymentPage />} />
+        <Route path="/cast-crew" element={<CastCrewPage />} /> {/* ✅ updated path */}
       </Routes>
     </Router>
-    
   );
 }
 
-
 export default AppRoutes;
-
