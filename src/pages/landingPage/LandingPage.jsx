@@ -1,118 +1,163 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './LandingPage.css';
 
 function LandingPage() {
+  const [showPopup, setShowPopup] = useState(false);
+  const [quantity, setQuantity] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.body.classList.add('dark');
+  }, []);
+
+  const handlePopupSubmit = (e) => {
+    e.preventDefault();
+    const count = parseInt(quantity);
+    if (!count || count < 1 || count > 10) {
+      alert('Masukkan jumlah kursi antara 1–10.');
+      return;
+    }
+    sessionStorage.setItem('maxSeats', count);
+    setShowPopup(false);
+    navigate('/ticket');
+  };
+
   const showInfo = {
-    date: 'July 27, 2025',
+    date: 'July 16, 2025',
     time: '7:00 PM',
-    venue: 'HIDUP JOKOWII'
+    venue: 'Amani Palladium Theater',
   };
 
   const cast = [
-    'Bhima Aryasatya',
-    'Indira Maheswari',
-    'Raka Wijaya',
-    'Tania Rahmadani',
-    'Aryo Dharma',
+    { name: 'Michelle Audreliya', role: 'Clara (Tokoh utama)', photo: '/images/cast/michelle.jpg' },
+    { name: 'Rindu Nathania', role: 'Livia (Sahabat Clara)', photo: '/images/cast/rindu.jpg' },
+    { name: 'Elifa Bariza', role: 'Ny. Laras (Guru teater)', photo: '/images/cast/elifa.jpg' },
+    { name: 'Choirunissa', role: 'Anita (Pesaing)', photo: '/images/cast/choirunissa.jpg' },
+    { name: 'Rayhan Hadi Prasetya', role: 'Adrian (Penulis naskah)', photo: '/images/cast/rayhan.jpg' },
   ];
 
-  return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>🎭 Welcome to Whispers</h1>
+  const academicTeam = [
+    { name: 'Nadia Puspita', role: 'Director', photo: '/images/crew/nadia.jpg' },
+    { name: 'Dr. Ratna Sari', role: 'Dosen Pembimbing', photo: '/images/dosen/ratna.jpg' },
+    { name: 'Yusuf Ramadhan', role: 'Asisten Dosen', photo: '/images/dosen/yusuf.jpg' },
+  ];
 
-      <section style={styles.section}>
-        <h2 style={styles.subtitle}>📖 Synopsis</h2>
-        <p style={styles.text}>
-          “Whispers” adalah kisah yang menggambarkan pergolakan batin antara mimpi dan kenyataan, di tengah dunia teater klasik yang mulai dilupakan.
-        </p>
-      </section>
+  const crew = [
+    { name: 'Nadia Puspita', role: 'Sutradara', photo: '/images/crew/nadia.jpg' },
+    { name: 'Dimas Arya', role: 'Penata Artistik', photo: '/images/crew/dimas.jpg' },
+    { name: 'Fathia Salsabila', role: 'Koreografer', photo: '/images/crew/fathia.jpg' },
+    { name: 'Bima Kusuma', role: 'Penata Musik', photo: '/images/crew/bima.jpg' },
+    { name: 'Siti Kamila', role: 'Manajer Produksi', photo: '/images/crew/kamila.jpg' },
+  ];
 
-      <section style={styles.section}>
-        <h2 style={styles.subtitle}>🗓️ Show Info</h2>
-        <p style={styles.text}><strong>Date:</strong> {showInfo.date}</p>
-        <p style={styles.text}><strong>Time:</strong> {showInfo.time}</p>
-        <p style={styles.text}><strong>Venue:</strong> {showInfo.venue}</p>
-      </section>
-
-      <section style={styles.section}>
-        <h2 style={styles.subtitle}>🎭 Cast</h2>
-        <ul style={styles.castList}>
-          {cast.map((name, index) => (
-            <li key={index} style={styles.castItem}>• {name}</li>
-          ))}
-        </ul>
-      </section>
-
-      <div style={styles.buttonGroup}>
-        <Link to="/ticket/quantity" style={styles.link}>
-          <button style={styles.button}>🎟️ Get Tickets</button>
-        </Link>
-        <Link to="/merch" style={styles.link}>
-          <button style={styles.button}>🛍️ Visit Merch</button>
-        </Link>
+  const renderSection = (title, members) => (
+    <section className="card">
+      <h2 className="section-title">{title}</h2>
+      <div className="cast-grid centered">
+        {members.map((person, index) => (
+          <div key={index} className="cast-card">
+            <div className="cast-photo-wrapper">
+              <img src={person.photo} alt={person.name} className="cast-photo" />
+            </div>
+            <div className="cast-details">
+              <p className="cast-name">{person.name}</p>
+              <p className="cast-role">{person.role}</p>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
+    </section>
+  );
+
+  return (
+    <main className="landing-container">
+      <div className="landing-content">
+        <h1 className="landing-title">
+          🎭 Welcome to <span className="highlight">Whispers</span>
+        </h1>
+        <p className="landing-subtitle">
+          Sebuah pertunjukan teater yang menyentuh batas mimpi dan kenyataan.
+        </p>
+
+        {/* Synopsis */}
+        <section className="card">
+          <h2 className="section-title">📖 Synopsis</h2>
+          <p className="section-text">
+            “Whispers” adalah kisah yang menggambarkan pergolakan batin antara mimpi dan kenyataan,
+            di tengah dunia teater klasik yang mulai dilupakan.
+          </p>
+        </section>
+
+        {/* Show Info */}
+        <div className="info-grid">
+          <div className="card info-card">
+            <h2 className="section-title">🗓️ Show Info</h2>
+            <ul className="info-list">
+              <li><strong>Date:</strong> {showInfo.date}</li>
+              <li><strong>Time:</strong> {showInfo.time}</li>
+              <li><strong>Venue:</strong> {showInfo.venue}</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Cast */}
+        {renderSection('🎭 Cast', cast)}
+
+        {/* Crew & Academic Team (academicTeam shown first) */}
+        {renderSection('🎬 Crew & Academic Team', [...academicTeam, ...crew])}
+
+        {/* CTA Buttons */}
+        <div className="button-group">
+          <button className="cta-button primary" onClick={() => setShowPopup(true)}>
+            🎟️ Get Tickets
+          </button>
+          <Link to="/merch">
+            <button className="cta-button secondary">🛍️ Visit Merch</button>
+          </Link>
+        </div>
+
+        {/* Footer */}
+        <footer className="footer">
+          <div className="footer-content">
+            <p>&copy; 2025 Whispers Theater. All rights reserved.</p>
+            <div className="contact-info">
+              <h4>📞 Contact Person</h4>
+              <p><strong>Michelle A.</strong> – +62 812-3456-7890</p>
+              <p><strong>Rayhan P.</strong> – +62 811-2233-4455</p>
+              <p>Email: whispers@teaterindie.id</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+
+      {/* Popup */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-card">
+            <h2 className="popup-title">🎟️ Masukkan Jumlah Kursi</h2>
+            <p className="popup-subtitle">Maksimal 10 kursi per pemesanan</p>
+            <form onSubmit={handlePopupSubmit} className="popup-form">
+              <input
+                type="number"
+                min="1"
+                max="10"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                className="popup-input"
+                placeholder="Jumlah kursi"
+                required
+              />
+              <div className="popup-actions">
+                <button type="button" className="popup-cancel" onClick={() => setShowPopup(false)}>Batal</button>
+                <button type="submit" className="popup-submit">Lanjut</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </main>
   );
 }
-
-const styles = {
-  container: {
-    maxWidth: '1000px',
-    // margin: '40px auto',
-    padding: '30px',
-    fontFamily: 'Poppins, sans-serif',
-    backgroundColor: '#fefefe',
-    borderRadius: '12px',
-    boxShadow: '0 8px 20px rgba(0,0,0,0.08)'
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: '32px',
-    fontWeight: '700',
-    color: '#1e3a8a',
-    marginBottom: '20px'
-  },
-  section: {
-    marginBottom: '30px'
-  },
-  subtitle: {
-    fontSize: '22px',
-    color: '#333',
-    marginBottom: '10px'
-  },
-  text: {
-    fontSize: '15px',
-    color: '#555',
-    lineHeight: '1.6'
-  },
-  castList: {
-    listStyle: 'none',
-    paddingLeft: '0',
-    color: '#444'
-  },
-  castItem: {
-    marginBottom: '6px',
-    fontSize: '15px'
-  },
-  buttonGroup: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '20px',
-    marginTop: '30px'
-  },
-  button: {
-    padding: '12px 20px',
-    fontSize: '16px',
-    borderRadius: '8px',
-    border: 'none',
-    backgroundColor: '#1e40af',
-    color: '#fff',
-    cursor: 'pointer',
-    fontWeight: '600'
-  },
-  link: {
-    textDecoration: 'none'
-  }
-};
 
 export default LandingPage;
