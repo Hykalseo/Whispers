@@ -37,12 +37,6 @@ function LandingPage() {
     { name: 'Rayhan Hadi Prasetya', role: 'Adrian (Penulis naskah)', photo: '/images/cast/rayhan.jpg' },
   ];
 
-  const academicTeam = [
-    { name: 'Nadia Puspita', role: 'Director', photo: '/images/crew/nadia.jpg' },
-    { name: 'Dr. Ratna Sari', role: 'Dosen Pembimbing', photo: '/images/dosen/ratna.jpg' },
-    { name: 'Yusuf Ramadhan', role: 'Asisten Dosen', photo: '/images/dosen/yusuf.jpg' },
-  ];
-
   const crew = [
     { name: 'Nadia Puspita', role: 'Sutradara', photo: '/images/crew/nadia.jpg' },
     { name: 'Dimas Arya', role: 'Penata Artistik', photo: '/images/crew/dimas.jpg' },
@@ -51,24 +45,11 @@ function LandingPage() {
     { name: 'Siti Kamila', role: 'Manajer Produksi', photo: '/images/crew/kamila.jpg' },
   ];
 
-  const renderSection = (title, members) => (
-    <section className="card">
-      <h2 className="section-title">{title}</h2>
-      <div className="cast-grid centered">
-        {members.map((person, index) => (
-          <div key={index} className="cast-card">
-            <div className="cast-photo-wrapper">
-              <img src={person.photo} alt={person.name} className="cast-photo" />
-            </div>
-            <div className="cast-details">
-              <p className="cast-name">{person.name}</p>
-              <p className="cast-role">{person.role}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+  const leaders = [
+    { name: 'Lina A. Pramudita', role: 'Director', photo: '/images/crew/lina.jpg' },
+    { name: 'Yusuf Rahmadi', role: 'Dosen Pembimbing', photo: '/images/crew/yusuf.jpg' },
+    { name: 'Nabila Azzahra', role: 'Asisten Dosen', photo: '/images/crew/nabila.jpg' },
+  ];
 
   return (
     <main className="landing-container">
@@ -101,13 +82,54 @@ function LandingPage() {
           </div>
         </div>
 
-        {/* Cast */}
-        {renderSection('🎭 Cast', cast)}
+        {/* Cast Section */}
+        <section className="card">
+          <h2 className="section-title">🎭 Cast</h2>
+          <div className="cast-grid">
+            {cast.map((person, index) => (
+              <div key={index} className="cast-card">
+                <div className="cast-photo-wrapper">
+                  <img src={person.photo} alt={person.name} className="cast-photo" />
+                </div>
+                <div className="cast-details">
+                  <p className="cast-name">{person.name}</p>
+                  <p className="cast-role">{person.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-        {/* Crew & Academic Team (academicTeam shown first) */}
-        {renderSection('🎬 Crew & Academic Team', [...academicTeam, ...crew])}
+        {/* Crew + Leaders */}
+        <section className="card">
+          <h2 className="section-title">🎬 Crew & Leadership</h2>
+          <div className="cast-grid">
+            {leaders.map((person, index) => (
+              <div key={`leader-${index}`} className="cast-card">
+                <div className="cast-photo-wrapper">
+                  <img src={person.photo} alt={person.name} className="cast-photo" />
+                </div>
+                <div className="cast-details">
+                  <p className="cast-name">{person.name}</p>
+                  <p className="cast-role">{person.role}</p>
+                </div>
+              </div>
+            ))}
+            {crew.map((person, index) => (
+              <div key={`crew-${index}`} className="cast-card">
+                <div className="cast-photo-wrapper">
+                  <img src={person.photo} alt={person.name} className="cast-photo" />
+                </div>
+                <div className="cast-details">
+                  <p className="cast-name">{person.name}</p>
+                  <p className="cast-role">{person.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-        {/* CTA Buttons */}
+        {/* Action Buttons */}
         <div className="button-group">
           <button className="cta-button primary" onClick={() => setShowPopup(true)}>
             🎟️ Get Tickets
@@ -131,7 +153,7 @@ function LandingPage() {
         </footer>
       </div>
 
-      {/* Popup */}
+      {/* Popup Modal */}
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-card">
