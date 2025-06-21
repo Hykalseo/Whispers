@@ -7,7 +7,6 @@ import LandingPage from './pages/landingPage/LandingPage';
 import TicketPage from './pages/ticket/Ticket';
 import BookingFormPage from './pages/ticket/BookingFormPage';
 import PaymentPage from './pages/ticket/payment';
-import MerchPage from './pages/merch/Merch'; // Buat file ini jika belum
 import CastCrewPage from './pages/castandcrew/CastCrewPage';
 
 export default function App() {
@@ -19,7 +18,6 @@ export default function App() {
         <Route path="/ticket/booking" element={<BookingFormPage />} />
         <Route path="/castandcrew/cast-crew" element={<CastCrewPage />} />
         <Route path="/ticket/payment" element={<PaymentPage />} />
-        <Route path="/merch" element={<MerchPage />} />
       </Routes>
     </Router>
   );

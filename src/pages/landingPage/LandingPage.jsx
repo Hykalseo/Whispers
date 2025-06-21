@@ -90,9 +90,6 @@ everything she’s facing?
           </p>
           <div className="button-group">
             <button className="cta-button primary" onClick={() => setShowPopup(true)}>🎟️ Book Tickets</button>
-            <Link to="/merch">
-              <button className="cta-button secondary">🛍️ Visit Merch</button>
-            </Link>
           </div>
         </section>
 

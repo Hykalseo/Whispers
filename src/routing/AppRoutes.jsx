@@ -2,9 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import LandingPage from '../pages/landingPage/LandingPage';
-import Merch from '../pages/merch/Merch';
 import Ticket from '../pages/ticket/Ticket';
-import BookingFormPage from '../pages/ticket/BookingFormPage';
 import PaymentPage from '../pages/ticket/payment';
 import CastCrewPage from '../pages/castandcrew/CastCrewPage';
 
@@ -13,9 +11,7 @@ function AppRoutes() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/merch" element={<Merch />} />
         <Route path="/ticket" element={<Ticket />} />
-        <Route path="/ticket/booking" element={<BookingFormPage />} />
         <Route path="/ticket/payment" element={<PaymentPage />} />
         <Route path="/cast-crew" element={<CastCrewPage />} /> {/* ✅ updated path */}
       </Routes>

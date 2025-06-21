@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { QRCodeCanvas } from 'qrcode.react';
 
 function PaymentPage() {
   const navigate = useNavigate();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [metode, setMetode] = useState('');
+  const [bukti, setBukti] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const seats = JSON.parse(sessionStorage.getItem('selectedSeats') || '[]');
   const biodata = JSON.parse(sessionStorage.getItem('biodata') || '{}');
 
-  const [metode, setMetode] = useState('');
-  const [bukti, setBukti] = useState(null);
-  const [isSuccess, setIsSuccess] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(document.body.classList.contains('dark'));
+  }, []);
 
   const handleFileChange = (e) => {
     setBukti(e.target.files[0]);
@@ -18,83 +23,92 @@ function PaymentPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!metode) {
-      alert('Pilih metode pembayaran terlebih dahulu.');
-      return;
-    }
+    if (!metode) return alert('Pilih metode pembayaran terlebih dahulu.');
+    if (!bukti) return alert('Upload bukti pembayaran terlebih dahulu.');
 
-    if (!bukti) {
-      alert('Upload bukti pembayaran terlebih dahulu.');
-      return;
-    }
-
-    // Simpan data simulasi
     sessionStorage.setItem("payment_method", metode);
     sessionStorage.setItem("bukti_file_name", bukti.name);
-
-    // Tampilkan modal sukses
     setIsSuccess(true);
   };
 
+  const textColor = isDarkMode ? '#f8fafc' : '#1f2937';
+  const bgCard = isDarkMode ? '#1e293b' : '#ffffff';
+  const inputBg = isDarkMode ? '#334155' : '#f8fafc';
+  const inputBorder = isDarkMode ? '#475569' : '#cbd5e1';
+
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>💳 Pembayaran Tiket</h2>
+    <div style={{
+      ...styles.container,
+      background: isDarkMode ? '#0f172a' : '#f1f5f9',
+      color: textColor
+    }}>
+      <div style={{ ...styles.card, backgroundColor: bgCard, color: textColor }}>
+        <h2 style={styles.title}>💳 Pembayaran Tiket</h2>
+        <p style={styles.info}><strong>Seats:</strong> {seats.join(', ')}</p>
+        <p style={styles.info}><strong>Nama Pemesan:</strong> {biodata?.nama}</p>
 
-      <p style={styles.info}><strong>Seats:</strong> {seats.join(', ')}</p>
-      <p style={styles.info}><strong>Nama Pemesan:</strong> {biodata?.nama}</p>
-
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <label style={styles.label}>Pilih Metode Pembayaran:</label>
-        <div style={styles.radioGroup}>
-          <label style={styles.radioOption}>
-            <input
-              type="radio"
-              value="qris"
-              checked={metode === 'qris'}
-              onChange={(e) => setMetode(e.target.value)}
-            />
-            QRIS
-          </label>
-          <label style={styles.radioOption}>
-            <input
-              type="radio"
-              value="bca"
-              checked={metode === 'bca'}
-              onChange={(e) => setMetode(e.target.value)}
-            />
-            Transfer Bank BCA
-          </label>
-        </div>
-
-        {metode === 'bca' && (
-          <div style={styles.transferInfo}>
-            <p><strong>Nama Bank:</strong> BCA</p>
-            <p><strong>No. Rekening:</strong> 1234567890</p>
-            <p><strong>Nama:</strong> Panitia Whispers</p>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <label style={styles.label}>Pilih Metode Pembayaran:</label>
+          <div style={styles.radioGroup}>
+            <label style={{ ...styles.radioOption, color: textColor }}>
+              <input
+                type="radio"
+                value="qris"
+                checked={metode === 'qris'}
+                onChange={(e) => setMetode(e.target.value)}
+              /> QRIS
+            </label>
+            <label style={{ ...styles.radioOption, color: textColor }}>
+              <input
+                type="radio"
+                value="bca"
+                checked={metode === 'bca'}
+                onChange={(e) => setMetode(e.target.value)}
+              /> Transfer Bank BCA
+            </label>
           </div>
-        )}
 
-        {metode === 'qris' && (
-          <div style={styles.transferInfo}>
-            <img src="/assets/qris.png" alt="QRIS" style={styles.qrisImage} />
-            <p>Silakan scan QRIS ini dan kirim bukti transfer di bawah.</p>
-          </div>
-        )}
+          {metode === 'bca' && (
+            <div style={{ ...styles.transferInfo, backgroundColor: inputBg, color: textColor }}>
+              <p><strong>Nama Bank:</strong> BCA</p>
+              <p><strong>No. Rekening:</strong> 1234567890</p>
+              <p><strong>Nama:</strong> Panitia Whispers</p>
+            </div>
+          )}
 
-        <label style={styles.label}>Upload Bukti Pembayaran:</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          style={styles.inputFile}
-        />
+          {metode === 'qris' && (
+            <div style={{ ...styles.transferInfo, backgroundColor: inputBg, color: textColor }}>
+              <QRCodeCanvas
+                value="https://dummy-whispers-payment.com/qris-demo"
+                size={180}
+                bgColor="#ffffff"
+                fgColor="#000000"
+                level="H"
+                includeMargin={true}
+              />
+              <p style={{ marginTop: 10 }}>Silakan scan QRIS ini dan kirim bukti transfer di bawah.</p>
+            </div>
+          )}
 
-        <button type="submit" style={styles.button}>
-          Submit & Selesaikan
-        </button>
-      </form>
+          <label style={styles.label}>Upload Bukti Pembayaran:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{
+              ...styles.inputFile,
+              backgroundColor: inputBg,
+              borderColor: inputBorder,
+              color: textColor
+            }}
+          />
 
-      {/* MODAL POPUP */}
+          <button type="submit" style={styles.submitBtn}>
+            Submit & Selesaikan
+          </button>
+        </form>
+      </div>
+
       {isSuccess && (
         <div style={styles.popupOverlay}>
           <div style={styles.popup}>
@@ -112,75 +126,77 @@ function PaymentPage() {
 
 const styles = {
   container: {
-    maxWidth: '600px',
-    margin: '50px auto',
-    padding: '30px',
+    minHeight: '100vh',
+    padding: '40px 16px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     fontFamily: 'Poppins, sans-serif',
-    backgroundColor: '#fefefe',
-    border: '1px solid #ddd',
-    borderRadius: '10px'
+  },
+  card: {
+    padding: '30px',
+    borderRadius: '16px',
+    maxWidth: '500px',
+    width: '100%',
+    boxShadow: '0 12px 30px rgba(0,0,0,0.2)',
   },
   title: {
-    color: '#333',
     textAlign: 'center',
-    marginBottom: '30px',
-    fontWeight: '600'
+    fontSize: '24px',
+    fontWeight: '700',
+    marginBottom: '20px',
+    color: '#facc15'
   },
   info: {
-    color: '#555',
     textAlign: 'center',
-    marginBottom: '10px'
+    marginBottom: '6px',
+    fontSize: '14px'
   },
   form: {
-    color: '#333',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px'
+    gap: '20px',
+    marginTop: '20px'
   },
   label: {
-    fontWeight: '500'
+    fontWeight: '600',
+    fontSize: '14px'
   },
   radioGroup: {
-    color: '#333',
     display: 'flex',
     gap: '20px',
-    marginTop: '5px'
+    flexWrap: 'wrap'
   },
   radioOption: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
-    color: '#333'
+    gap: '6px',
+    fontSize: '14px'
   },
   transferInfo: {
-    backgroundColor: '#f0f0f0',
-    padding: '15px',
     borderRadius: '8px',
-  },
-  qrisImage: {
-    maxWidth: '100%',
-    height: 'auto',
-    marginBottom: '10px'
+    padding: '16px',
+    fontSize: '14px'
   },
   inputFile: {
-    border: '1px solid #ccc',
-    padding: '10px',
-    borderRadius: '6px'
+    border: '1px solid',
+    borderRadius: '8px',
+    padding: '10px'
   },
-  button: {
+  submitBtn: {
+    backgroundColor: '#22c55e',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '10px',
     padding: '14px',
     fontSize: '16px',
-    backgroundColor: '#28a745',
-    border: 'none',
-    borderRadius: '8px',
     fontWeight: '600',
     cursor: 'pointer'
   },
-  // Popup Styles
   popupOverlay: {
     position: 'fixed',
     top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -188,28 +204,26 @@ const styles = {
   },
   popup: {
     backgroundColor: '#fff',
-    padding: '30px',
-    borderRadius: '10px',
-    width: '90%',
-    maxWidth: '400px',
-    boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
+    padding: '32px',
+    borderRadius: '16px',
     textAlign: 'center',
+    boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+    maxWidth: '400px',
+    width: '90%',
     fontFamily: 'Poppins, sans-serif'
   },
   popupTitle: {
     fontSize: '20px',
-    fontWeight: '600',
-    color: '#28a745',
+    fontWeight: '700',
+    color: '#22c55e',
     marginBottom: '10px'
   },
   popupText: {
-    fontSize: '14px',
     color: '#444',
     marginBottom: '20px'
   },
   popupBtn: {
-    padding: '10px 20px',
-    fontSize: '16px',
+    padding: '10px 24px',
     backgroundColor: '#1e40af',
     color: '#fff',
     border: 'none',
